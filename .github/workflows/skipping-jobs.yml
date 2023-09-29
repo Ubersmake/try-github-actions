@@ -78,3 +78,10 @@ jobs:
     if: success('job-that-runs')
     steps:
       - run: echo 'This should run'
+
+  try-after-success-string-parameter:
+    name: try-undocumented-success-string-parameter succeeded, so this should run
+    runs-on: ubuntu-latest
+    needs: [try-undocumented-success-string-parameter]
+    steps:
+      - run: echo 'This should run'
