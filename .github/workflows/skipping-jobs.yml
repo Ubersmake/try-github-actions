@@ -54,3 +54,20 @@ jobs:
     needs: [check-things-with-always]
     steps:
       - run: echo 'This should run'
+
+  use-always-with-conditional:
+    name: See if things worked with always and result conditionals
+    runs-on: ubuntu-latest
+    needs: [try-this-thing, try-this-other-thing]
+    if: always() && needs.try-this-thing.result == 'skipped' && needs.try-this-other-thing == 'success'
+    steps:
+      - run: echo 'This should run'
+
+  # https://stackoverflow.com/questions/74386773/github-actions-job-is-skipped-although-all-needs-succeeded/74529413#74529413
+  use-undocumented-success-string-parameter:
+    name: See if things worked with undocumented success(string)
+    runs-on: ubuntu-latest
+    needs: [try-this-thing, try-this-other-thing]
+    if: success('try-this-other-thing')
+    steps:
+      - run: echo 'This should run'
