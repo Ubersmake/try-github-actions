@@ -1,0 +1,11 @@
+name: Try skipping jobs
+
+on:
+    workflow_dispatch:
+
+jobs:
+  start-here:
+    name: Start here
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Starting here'
