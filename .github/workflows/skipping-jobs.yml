@@ -9,3 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Starting here'
+
+  try-this-thing:
+    name: Try this thing, but skip it
+    runs-on: ubuntu-latest
+    needs: start-here
+    if: false
+    steps:
+      - run: echo 'This should have skipped'
+
+  try-this-other-thing:
+    name: Try this other thing
+    runs-on: ubuntu-latest
+    needs: start-here
+    steps:
+      - run: echo 'This should have worked'
+
+  check-things-with-needs:
+    name: See if things worked with needs
+    runs-on: ubuntu-latest
+    needs: [try-this-thing, try-this-other-thing]
+    steps:
+      - run: echo 'This should run'
