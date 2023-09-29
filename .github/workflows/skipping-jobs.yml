@@ -36,7 +36,7 @@ jobs:
     name: "needs.<job_id>.result conditional"
     runs-on: ubuntu-latest
     needs: [job-that-skips, job-that-runs]
-    if: needs.job-that-skips.result == 'skipped' && needs.job-that-runs == 'success'
+    if: needs.job-that-skips.result == 'skipped' && needs.job-that-runs.result == 'success'
     steps:
       - run: echo 'Both results are true, so this should run'
 
