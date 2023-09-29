@@ -26,14 +26,14 @@ jobs:
       - run: echo 'This should run'
 
   try-needs:
-    name: Needs
+    name: "needs:"
     runs-on: ubuntu-latest
     needs: [job-that-skips, job-that-runs]
     steps:
       - run: echo 'One job passed, so this should run'
 
   try-results:
-    name: See if things worked with results
+    name: "needs.<job_id>.result conditional"
     runs-on: ubuntu-latest
     needs: [job-that-skips, job-that-runs]
     if: needs.job-that-skips.result == 'skipped' && needs.job-that-runs == 'success'
@@ -41,7 +41,7 @@ jobs:
       - run: echo 'Both results are true, so this should run'
 
   always-run:
-    name: Always run this job
+    name: Job that always run
     runs-on: ubuntu-latest
     needs: [job-that-skips, job-that-runs]
     if: always()
@@ -49,14 +49,14 @@ jobs:
       - run: echo 'This should run'
 
   try-after-always-run:
-    name: always-run succeeded, so this should run
+    name: post-always-run
     runs-on: ubuntu-latest
     needs: [always-run]
     steps:
       - run: echo 'This should run'
 
   try-always-with-conditional:
-    name: See if things worked with always and result conditionals
+    name: "always() with needs.<job_id>.result conditional"
     runs-on: ubuntu-latest
     needs: [job-that-skips, job-that-runs]
     if: always() && needs.job-that-skips.result == 'skipped' && needs.job-that-runs.result == 'success'
@@ -64,14 +64,14 @@ jobs:
       - run: echo 'This should run'
 
   try-after-always-with-conditional:
-    name: try-always-with-conditional succeeded, so this should run
+    name: post-always-with-conditional
     runs-on: ubuntu-latest
     needs: [try-always-with-conditional]
     steps:
       - run: echo 'This should run'
 
   try-after-always-with-conditional-with-more-conditionals:
-    name: try-always-with-conditional succeeded, but more conditionals are needed
+    name: Even more conditionals
     runs-on: ubuntu-latest
     needs: [try-always-with-conditional]
     if: always() && needs.try-always-with-conditional.result == 'success'
@@ -80,7 +80,7 @@ jobs:
   
   # https://stackoverflow.com/questions/74386773/github-actions-job-is-skipped-although-all-needs-succeeded/74529413#74529413
   try-undocumented-success-string-parameter:
-    name: Use undocumented success(string)
+    name: Undocumented success(string)
     runs-on: ubuntu-latest
     needs: [job-that-skips, job-that-runs]
     if: success('job-that-runs')
@@ -88,7 +88,7 @@ jobs:
       - run: echo 'This should run'
 
   try-after-success-string-parameter:
-    name: try-undocumented-success-string-parameter succeeded, so this should run
+    name: post-undocumented-success-string
     runs-on: ubuntu-latest
     needs: [try-undocumented-success-string-parameter]
     steps:
