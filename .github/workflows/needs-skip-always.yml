@@ -1,0 +1,73 @@
+name: Test needs, skip(ped), and always()
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # Step 1: Start somewhere
+  start-here:
+    name: Start here
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Start here'
+
+  # Step 2: Build. Or skip the build if the artifact can be grabbed from somewhere else.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: start-here
+    steps:
+      - run: echo 'Build'
+
+  skip-build:
+    name: Skip Build
+    runs-on: ubuntu-latest
+    needs: start-here
+    if: false
+    steps:
+      - run: echo 'Do not build'
+
+  # Step 3: Test the build.
+  test-after-build:
+    name: "Test"
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - run: echo 'Test after build'
+
+  test-after-skip-build:
+    name: "Test"
+    runs-on: ubuntu-latest
+    needs: [skip-build]
+    steps:
+      - run: echo 'Test after build'
+
+  always-test-after-skip-build:
+    name: "Test"
+    runs-on: ubuntu-latest
+    needs: [skip-build]
+    if: always()
+    steps:
+      - run: echo 'Test after build'
+
+  # Step 4: Report.
+  report-after-test-after-build:
+    name: "Report"
+    runs-on: ubuntu-latest
+    needs: [test-after-build]
+    steps:
+      - run: echo 'Report after test'
+
+  report-after-test-after-skip-build:
+    name: "Report"
+    runs-on: ubuntu-latest
+    needs: [test-after-skip-build]
+    steps:
+      - run: echo 'Report after test'
+
+  report-after-always-test-after-skip-build:
+    name: "Report"
+    runs-on: ubuntu-latest
+    needs: [always-test-after-skip-build]
+    steps:
+      - run: echo 'Report after test'
