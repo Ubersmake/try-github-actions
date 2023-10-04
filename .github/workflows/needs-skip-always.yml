@@ -80,3 +80,54 @@ jobs:
     if: always()
     steps:
       - run: echo 'always-report-with-skip-build'
+
+  job1:
+    name: "Job 1 will run"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'job1'
+
+  job2:
+    name: "Job 2 might skip"
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - run: echo 'job2'
+
+  needs-job1-job2:
+    name: "Needs Job 1 and Job 2"
+    runs-on: ubuntu-latest
+    needs: [job1, job2]
+    steps:
+      - run: echo 'needs-job1-job2'
+  
+  always-needs-job1-job2:
+    name: "always() needs Job 1 and Job 2"
+    runs-on: ubuntu-latest
+    needs: [job1, job2]
+    if: always()
+    steps:
+      - run: echo 'always-needs-job1-job2'
+
+  always-needs-job1-job2-skipped:
+    name: "Needs Job 1 and Job 2"
+    runs-on: ubuntu-latest
+    needs: [job1, job2]
+    if: always() && needs.job2.result == 'skipped'
+    steps:
+      - run: echo 'Job 2 skipped'
+  
+  job3-job2-skipped:
+    name: "After Job 2 skipped"
+    runs-on: ubuntu-latest
+    needs: [always-needs-job1-job2-skipped]
+    steps:
+      - run: echo 'Job 3 aftr Job 2 skipped'
+
+  always-job3-job2-skipped:
+    name: "After Job 2 skipped"
+    runs-on: ubuntu-latest
+    needs: [always-needs-job1-job2-skipped]
+    if: always()
+    steps:
+      - run: echo 'always() with Job 3 aftr Job 2 skipped'
