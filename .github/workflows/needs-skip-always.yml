@@ -58,7 +58,7 @@ jobs:
     steps:
       - run: echo 'Test after build and lint'
 
-  # Step 4: Report.
+  # Step 5: Report.
   report:
     name: "Report"
     runs-on: ubuntu-latest
@@ -77,5 +77,6 @@ jobs:
     name: "Report"
     runs-on: ubuntu-latest
     needs: [always-test-with-skip-build]
+    if: always()
     steps:
       - run: echo 'Report after test'
