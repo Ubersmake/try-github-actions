@@ -9,7 +9,7 @@ jobs:
     name: Start here
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Start here'
+      - run: echo 'start-here'
 
   # Step 2-1: Build. Or skip the build if the artifact can be grabbed from somewhere else.
   build:
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: start-here
     steps:
-      - run: echo 'Build'
+      - run: echo 'build'
 
   skip-build:
     name: Skip Build
@@ -25,7 +25,7 @@ jobs:
     needs: start-here
     if: false
     steps:
-      - run: echo 'Do not build'
+      - run: echo 'skip-build'
 
   # Step 2-2: Lint.
   lint:
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: start-here
     steps:
-      - run: echo 'Build'
+      - run: echo 'lint'
 
   # Step 3: Test the build.
   test:
@@ -41,22 +41,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build, lint]
     steps:
-      - run: echo 'Test after build and lint'
+      - run: echo 'test'
 
   test-with-skip-build:
-    name: "Test"
+    name: "Test after Skip Build"
     runs-on: ubuntu-latest
     needs: [skip-build, lint]
     steps:
-      - run: echo 'Test after build and lint'
+      - run: echo 'test-with-skip-build'
 
   always-test-with-skip-build:
-    name: "Test"
+    name: "Test with always() after Skip Build"
     runs-on: ubuntu-latest
     needs: [skip-build, lint]
     if: always()
     steps:
-      - run: echo 'Test after build and lint'
+      - run: echo 'always-test-with-skip-build'
 
   # Step 5: Report.
   report:
@@ -64,19 +64,19 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - run: echo 'Report after test'
+      - run: echo 'report'
 
   report-with-skip-build:
-    name: "Report"
+    name: "Report after Skip Build"
     runs-on: ubuntu-latest
     needs: [test-with-skip-build]
     steps:
-      - run: echo 'Report after test'
+      - run: echo 'report-with-skip-build'
 
   always-report-with-skip-build:
-    name: "Report"
+    name: "Report with always() after Skip Buid"
     runs-on: ubuntu-latest
     needs: [always-test-with-skip-build]
     if: always()
     steps:
-      - run: echo 'Report after test'
+      - run: echo 'always-report-with-skip-build'
