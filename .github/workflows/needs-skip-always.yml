@@ -4,70 +4,76 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Step 1: Start somewhere
-  start-here:
-    name: Start here
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo 'Start here'
-
-  # Step 2: Build. Or skip the build if the artifact can be grabbed from somewhere else.
+  # Step 1-1: Build. Or skip the build if the artifact can be grabbed from somewhere else.
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: start-here
     steps:
-      - run: echo 'Build'
+      - run: echo 'build'
 
   skip-build:
     name: Skip Build
     runs-on: ubuntu-latest
-    needs: start-here
     if: false
     steps:
-      - run: echo 'Do not build'
+      - run: echo 'skip-build'
+
+  # Step 1-2: Lint.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'lint'
 
   # Step 3: Test the build.
-  test-after-build:
+  test:
     name: "Test"
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build, lint]
     steps:
-      - run: echo 'Test after build'
+      - run: echo 'test'
 
-  test-after-skip-build:
-    name: "Test"
+  test-with-skip-build:
+    name: "Test after Skip Build"
     runs-on: ubuntu-latest
-    needs: [skip-build]
+    needs: [skip-build, lint]
     steps:
-      - run: echo 'Test after build'
+      - run: echo 'test-with-skip-build'
 
-  always-test-after-skip-build:
-    name: "Test"
+  always-test-with-skip-build:
+    name: "Test with always() after Skip Build"
     runs-on: ubuntu-latest
-    needs: [skip-build]
+    needs: [skip-build, lint]
     if: always()
     steps:
-      - run: echo 'Test after build'
+      - run: echo 'always-test-with-skip-build'
 
-  # Step 4: Report.
-  report-after-test-after-build:
+  # Step 5: Report.
+  report:
     name: "Report"
     runs-on: ubuntu-latest
-    needs: [test-after-build]
+    needs: [test]
     steps:
-      - run: echo 'Report after test'
+      - run: echo 'report'
 
-  report-after-test-after-skip-build:
-    name: "Report"
+  report-with-skip-build:
+    name: "Report after Skip Build"
     runs-on: ubuntu-latest
-    needs: [test-after-skip-build]
+    needs: [test-with-skip-build]
     steps:
-      - run: echo 'Report after test'
+      - run: echo 'report-with-skip-build'
 
-  report-after-always-test-after-skip-build:
-    name: "Report"
+  report-after-always-test-with-skip-build:
+    name: "Report  after Test with always() after Skip Build"
     runs-on: ubuntu-latest
-    needs: [always-test-after-skip-build]
+    needs: [always-test-with-skip-build]
     steps:
-      - run: echo 'Report after test'
+      - run: echo 'always-report-with-skip-build'
+
+  always-report-after-always-test-with-skip-build:
+    name: "Report with always() after Test with always() after Skip Build"
+    runs-on: ubuntu-latest
+    needs: [always-test-with-skip-build]
+    if: always()
+    steps:
+      - run: echo 'always-report-with-skip-build'
